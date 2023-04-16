@@ -29,31 +29,63 @@ n == height.length
  line and a width given by the distance between the lines. Return the area of 
  the rectangle with the largest area.
  */
+// var maxArea = function (height) {
+//   /**
+//    * Pseudocode (brute force):
+//     0) track largest area
+//     1) loop through the array once for the first value
+//     2) loop through the array starting from the 2nd value and find area of each based on the first value
+//         - let container = height[i] > height[j] ? height[j] * (j-i)
+//         - let container = height[i] < height[j] ? height[i] * (j-i)
+//         - container > most ? most = container
+//      */
+
+//   let most = 0;
+//   let len = height.length;
+//   for (let i = 0; i < len; i++) {
+//     for (let j = i + 1; j < len; j++) {
+//       let container;
+//       if (height[i] > height[j]) {
+//         container = height[j] * (j - i);
+//       } else {
+//         container = height[i] * (j - i);
+//       }
+//       if (container > most) {
+//         most = container;
+//       }
+//     }
+//   }
+//   return most;
+// };
+
 var maxArea = function (height) {
   /**
-   * Pseudocode: 
-    0) track largest area 
-    1) loop through the array once for the first value 
-    2) loop through the array starting from the 2nd value and find area of each based on the first value
-        - let container = height[i] > height[j] ? height[j] * (j-i)
-        - let container = height[i] < height[j] ? height[i] * (j-i)  
-        - container > most ? most = container 
+     * Pseudocode (optimized):
+     * 1) create two pointers, one at the beginning and one at the end
+     * 2) compare the values at each pointer; width = left - right
+     * 3) if the value at the left pointer is greater than the value at the 
+        right pointer, move the right pointer to the left
+     * 4) if the value at the right pointer is greater than the value at the 
+        left pointer, move the left pointer to the right
+     * 5) repeat steps 2-4 until the pointers meet
+     * 6) return the largest area
      */
-
+  let left = 0;
+  let right = height.length - 1;
   let most = 0;
-  let len = height.length;
-  for (let i = 0; i < len; i++) {
-    for (let j = i + 1; j < len; j++) {
-      let container;
-      if (height[i] > height[j]) {
-        container = height[j] * (j - i);
-      } else {
-        container = height[i] * (j - i);
-      }
-      if (container > most) {
-        most = container;
-      }
+
+  while (left < right) {
+    let w = right - left;
+    let h;
+    if (height[left] < height[right]) {
+      h = height[left];
+      left++;
+    } else {
+      h = height[right];
+      right--;
     }
+    let container = h * w;
+    most = Math.max(most, container);
   }
   return most;
 };
