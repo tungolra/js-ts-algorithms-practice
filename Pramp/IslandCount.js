@@ -84,58 +84,115 @@ Constraints:
     
     queue[0][0]
 
-    // Breadth First Search: O(^mn)
+    // Breadth First Search: O(mn)
 */
 
 function getNumberOfIslands(binaryMatrix) {
-    // your code goes here
-    let counter = 0; 
-    
-    for (let i = 0; i < binaryMatrix.length; i++){ 
-      for (let j = 0; j < binaryMatrix[i].length; j++){ 
-        let queue = []; 
-        if (binaryMatrix[i][j] === 1) { 
-          queue.push([i, j])
-          
-          counter++; 
-        }
-        
-        while (queue.length != 0) { 
-          // check vert and horiz
-          
-          let row = queue[0][0]
-          let col = queue[0][1]
-          
-          queue.shift() 
-          binaryMatrix[row][col] = 0; 
-          
-          if (col > 0 && binaryMatrix[row][col - 1] === 1){
-            queue.push([row, col - 1])          
-          } 
-          if (col < binaryMatrix[row].length - 1 && binaryMatrix[row][col + 1] === 1){
-            queue.push([row, col + 1])
-          } 
-          // up
-          if (row > 0 && binaryMatrix[row - 1][col] === 1){
-            queue.push([row - 1, col])
-          } 
-          // down
-        // console.log("start: \n", binaryMatrix, "\n ---End", "\n Row: ", row, "\n Col: ", col )
-          if (row < binaryMatrix.length - 1 && binaryMatrix[row + 1][col] === 1){
-            queue.push([row + 1, col])
-          } 
-          
-        }
-        
-        
+  // your code goes here
+  let counter = 0;
+
+  for (let i = 0; i < binaryMatrix.length; i++) {
+    for (let j = 0; j < binaryMatrix[i].length; j++) {
+      let queue = [];
+      if (binaryMatrix[i][j] === 1) {
+        queue.push([i, j]);
+        counter++;
       }
-      
+
+      while (queue.length != 0) {
+        // check vert and horiz
+
+        let row = queue[0][0];
+        let col = queue[0][1];
+
+        queue.shift();
+        binaryMatrix[row][col] = 0;
+
+        if (col > 0 && binaryMatrix[row][col - 1] === 1) {
+          queue.push([row, col - 1]);
+        }
+        if (
+          col < binaryMatrix[row].length - 1 &&
+          binaryMatrix[row][col + 1] === 1
+        ) {
+          queue.push([row, col + 1]);
+        }
+        // up
+        if (row > 0 && binaryMatrix[row - 1][col] === 1) {
+          queue.push([row - 1, col]);
+        }
+        // down
+        // console.log("start: \n", binaryMatrix, "\n ---End", "\n Row: ", row, "\n Col: ", col )
+        if (row < binaryMatrix.length - 1 && binaryMatrix[row + 1][col] === 1) {
+          queue.push([row + 1, col]);
+        }
+      }
     }
-    return counter; 
   }
-  
-  console.log(getNumberOfIslands([ [0,    1,    0,    1,    0],
-             [0,    0,    1,    1,    1],
-             [1,    0,    0,    1,    0],
-             [0,    1,    1,    0,    0],
-             [1,    0,    1,    0,    1] ]))
+  return counter;
+}
+
+/**
+ * Technique: Depth-first search
+ * Optimized explanation: explore as far as possible along each branch before backtracking to
+ * reduce space complexity (stack vs queue)
+ */
+
+function getNumberOfIslandsDFS(binaryMatrix) {
+  let counter = 0;
+
+  function dfs(row, col) {
+    if (
+      row < 0 ||
+      col < 0 ||
+      row >= binaryMatrix.length ||
+      col >= binaryMatrix[0].length ||
+      binaryMatrix[row][col] === 0
+    ) {
+      return;
+    }
+    binaryMatrix[row][col] = 0;
+    dfs(row - 1, col);
+    dfs(row + 1, col);
+    dfs(row, col - 1);
+    dfs(row, col + 1);
+  }
+
+  for (let i = 0; i < binaryMatrix.length; i++) {
+    for (let j = 0; j < binaryMatrix[i].length; j++) {
+      if (binaryMatrix[i][j] === 1) {
+        counter++;
+        dfs(i, j);
+      }
+    }
+  }
+
+  return counter;
+}
+
+const test1 = [[0]];
+const test2 = [
+  [0, 1, 0, 1, 0],
+  [0, 0, 1, 1, 1],
+  [1, 0, 0, 1, 0],
+  [0, 1, 1, 0, 0],
+  [1, 0, 1, 0, 1],
+];
+const test3 = [
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+];
+const test4 = [[1, 0, 1, 0]];
+
+// console.log("should return: 0 \n Output:", getNumberOfIslands(test1));
+// console.log("should return: 6 \n Output:", getNumberOfIslands(test2));
+// console.log("should return: 1 \n Output:", getNumberOfIslands(test3));
+// console.log("should return: 2 \n Output:", getNumberOfIslands(test4));
+
+console.log("should return: 0 \n Output:", getNumberOfIslandsDFS(test1));
+console.log("should return: 6 \n Output:", getNumberOfIslandsDFS(test2));
+console.log("should return: 1 \n Output:", getNumberOfIslandsDFS(test3));
+console.log("should return: 2 \n Output:", getNumberOfIslandsDFS(test4));
