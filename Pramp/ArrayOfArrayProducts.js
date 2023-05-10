@@ -28,6 +28,15 @@ Constraints:
 
 0 ≤ arr.length ≤ 20
 [output] array.integer
+
+Edge cases: 
+- empty array
+- array with 1 element
+
+Considerations: 
+- array with 2 elements
+- negative numbers
+
  */
 
 // brute force solution by calculating product of all ints except arr[i]
