@@ -29,8 +29,15 @@ Constraints:
  *
  * Variable Sliding Window approach
  *
- * Time Complexity: O(n)
+ * Time Complexity: O(n+m)
+ * - we’re doing a linear iteration of both str and arr of lengths N and M 
+ * respectively, so the runtime complexity is linear in the size of
+ * the input, i.e. O(N+M).
+ * 
  * Space Complexity: O(n)
+ * - we’re using a Map/Hash Table countMap with M key/values pairs plus 
+ * few constant size counters, which together give us an O(M) space 
+ * complexity (linear in the size of arr).
  *
  * we can use a variable sliding window approach to solve this problem.
  * The idea is to use two pointers: start and end to keep track of the
@@ -54,10 +61,10 @@ function getShortestUniqueSubstring(arr, str) {
   for (let i = 0; i < arr.length; i++) {
     hash[arr[i]] = 0;
   }
-// set up pointers
-// min represents length of min window,
-// minStart represents start of min window, 
-// count represents how many unique chars are in window
+  // set up pointers
+  // min represents length of min window,
+  // minStart represents start of min window,
+  // count represents how many unique chars are in window
   let start = 0,
     end = 0,
     min = str.length + 1,
@@ -66,7 +73,7 @@ function getShortestUniqueSubstring(arr, str) {
 
   // expand window
   while (end < str.length) {
-    // update hash 
+    // update hash
     if (str[end] in hash) {
       // update count only if val of char in hash is 0
       if (hash[str[end]] === 0) {
@@ -81,8 +88,16 @@ function getShortestUniqueSubstring(arr, str) {
     // shrink window
     while (count === arr.length) {
       // update length of min window
+     
+      /* check if end - start is less than min because we want to find the 
+      smallest window that has all the desired characters in the hash map 
+      If all the counts are above zero, we can shrink the window from the left. 
+      */
       if (end - start < min) {
+        // when end - start is less than min, this is because
+        // we have found a smaller window
         min = end - start;
+        //
         minStart = start;
       }
       // update hash
@@ -121,4 +136,9 @@ console.log(
   "_Test 4_ \nExpected: '' \n",
   "Actual:",
   getShortestUniqueSubstring(["x", "y", "z", "r"], "xyyzyzyx")
+);
+console.log(
+  "_Test 5_ \nExpected: 'BANC' \n",
+  "Actual:",
+  getShortestUniqueSubstring(["A", "B", "C"], "ADOBECODEBANCDDD")
 );
